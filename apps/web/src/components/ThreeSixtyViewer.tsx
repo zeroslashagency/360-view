@@ -43,7 +43,7 @@ const ThreeSixtyViewer: React.FC<ThreeSixtyViewerProps> = ({ imageUrl }) => {
     }, [image]);
 
     return (
-        <div className="relative w-full h-96 bg-gray-900 rounded-lg overflow-hidden shadow-xl">
+        <div className="relative w-full h-full bg-gray-900 overflow-hidden shadow-xl">
             <div ref={containerRef} className="w-full h-full" />
 
             <div className="absolute top-4 left-4 bg-white/10 backdrop-blur-md px-3 py-1 rounded-md text-white text-sm pointer-events-none z-10">

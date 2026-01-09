@@ -1,77 +1,78 @@
+
 import React, { useState } from 'react';
-import ThreeSixtyViewer from '../components/ThreeSixtyViewer';
-import RelatedBlogs from '../components/RelatedBlogs';
+import TourOverlay from '../components/TourOverlay';
 
 const Home: React.FC = () => {
-    const [currentImage, setCurrentImage] = useState('/images/360/village.jpg');
+    // State to track active tour scene (null = lobby)
+    const [activeScene, setActiveScene] = useState<{ id: number; name: string; url: string; cover: string } | null>(null);
 
     const scenes = [
-        { id: 1, name: 'Village View', url: '/images/360/village.jpg' },
-        { id: 2, name: 'City Center', url: '/images/360/city.jpg' },
-        { id: 3, name: 'Indoor Tour', url: '/images/360/indoor.jpg' },
+        { id: 1, name: 'Village View', url: '/images/360/village.jpg', cover: '/images/360/village.jpg' },
+        { id: 2, name: 'City Center', url: '/images/360/city.jpg', cover: '/images/360/city.jpg' },
+        { id: 3, name: 'Indoor Tour', url: '/images/360/indoor.jpg', cover: '/images/360/indoor.jpg' },
     ];
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
-            {/* Hero Section */}
-            <section className="relative h-[500px] flex items-center justify-center bg-gradient-to-r from-blue-900 to-indigo-800 text-white overflow-hidden">
-                <div className="absolute inset-0 bg-black/30"></div>
-                <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-                    <h1 className="text-5xl md:text-6xl font-extrabold tracking-tight mb-6 drop-shadow-lg">
-                        Explore the World in 360°
-                    </h1>
-                    <p className="text-xl md:text-2xl font-light text-gray-200 mb-8">
-                        Immersive virtual tours and stories from around the globe.
-                    </p>
-                    <button className="bg-white text-blue-900 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-colors shadow-lg">
-                        Start Exploring
-                    </button>
-                </div>
-            </section>
+            {activeScene ? (
+                <TourOverlay scene={activeScene} onExit={() => setActiveScene(null)} />
+            ) : (
+                <>
+                    {/* Hero Section */}
+                    <section className="relative h-[400px] flex items-center justify-center bg-gradient-to-r from-gray-900 to-slate-800 text-white overflow-hidden">
+                        {/* Background Pattern */}
+                        <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]"></div>
 
-            {/* 360 Viewer Section */}
-            <section className="py-20 px-4 max-w-7xl mx-auto">
-                <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100 p-8">
-                    <div className="mb-8 text-center">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-2">Immersive Gallery</h2>
-                        <p className="text-gray-600">Experience our featured locations in full 360 degrees.</p>
-                    </div>
+                        <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
+                            <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
+                                Virtual Asset Tours
+                            </h1>
+                            <p className="text-lg md:text-xl font-light text-gray-300 mb-8">
+                                Select a location below to begin your immersive experience.
+                            </p>
+                        </div>
+                    </section>
 
-                    <ThreeSixtyViewer imageUrl={currentImage} />
-
-                    <div className="mt-8 grid grid-cols-1 md:grid-cols-3 gap-6">
-                        {scenes.map((scene) => (
-                            <button
-                                key={scene.id}
-                                onClick={() => setCurrentImage(scene.url)}
-                                className={`group relative h - 24 rounded - xl overflow - hidden shadow - sm transition - all duration - 300 hover: shadow - md ${currentImage === scene.url
-                                        ? 'ring-4 ring-blue-500 ring-offset-2'
-                                        : 'hover:ring-2 hover:ring-blue-300 hover:ring-offset-1'
-                                    } `}
-                            >
-                                <div className={`absolute inset - 0 bg - black / 40 group - hover: bg - black / 20 transition - colors ${currentImage === scene.url ? 'bg-black/0' : ''
-                                    } `} />
-                                {/* Placeholder since we don't have separate thumbnails yet, using colored div or generic icons could work, but text is fine */}
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                    <span className="text-white font-bold text-lg drop-shadow-md">{scene.name}</span>
+                    {/* Lobby / Cover Cards Section */}
+                    <section className="py-20 px-4 max-w-7xl mx-auto -mt-24 relative z-20">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            {scenes.map((scene) => (
+                                <div
+                                    key={scene.id}
+                                    className="bg-white rounded-2xl shadow-xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group border border-gray-100"
+                                    onClick={() => setActiveScene(scene)}
+                                >
+                                    <div className="relative h-64 overflow-hidden">
+                                        <img
+                                            src={scene.cover}
+                                            alt={scene.name}
+                                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                        />
+                                        <div className="absolute inset-0 bg-black/20 group-hover:bg-black/0 transition-colors"></div>
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                                            <span className="bg-white/90 text-gray-900 px-6 py-2 rounded-full font-bold shadow-lg transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                                                Enter Tour
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div className="p-6">
+                                        <h3 className="text-xl font-bold text-gray-800 mb-2">{scene.name}</h3>
+                                        <p className="text-gray-500 text-sm">Interactive 360° Panorama</p>
+                                    </div>
                                 </div>
-                            </button>
-                        ))}
-                    </div>
-                </div>
-            </section>
+                            ))}
+                        </div>
+                    </section>
 
-            {/* Related Blogs Section */}
-            <section className="bg-gray-50 border-t border-gray-200">
-                <RelatedBlogs />
-            </section>
-
-            {/* Footer (Simple placeholder) */}
-            <footer className="bg-gray-800 text-white py-8 text-center">
-                <p>&copy; 2026 Blog Platform. All rights reserved.</p>
-            </footer>
+                    {/* Footer */}
+                    <footer className="bg-gray-800 text-white py-8 text-center mt-12">
+                        <p>&copy; 2026 Blog Platform. All rights reserved.</p>
+                    </footer>
+                </>
+            )}
         </div>
     );
 };
 
 export default Home;
+
