@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import 'pannellum/build/pannellum.css';
-// @ts-ignore
-import { viewer } from 'pannellum';
+import 'pannellum';
+
 
 interface ThreeSixtyViewerProps {
     imageUrl?: string;
@@ -15,15 +15,19 @@ const ThreeSixtyViewer: React.FC<ThreeSixtyViewerProps> = ({ imageUrl }) => {
     useEffect(() => {
         if (!containerRef.current) return;
 
-        // Destroy existing viewer if any
+        // Pannellum attaches to window
+        const pannellum = window.pannellum;
+
+        if (!pannellum) {
+            console.error("Pannellum library not loaded");
+            return;
+        }
+
         if (viewerRef.current) {
-            // Pannellum doesn't have a clean destroy method exposed easily in all versions, 
-            // but re-initializing on the same ID usually requires cleanup.
-            // For simplicity in this wrapper, we just let it mount once or clear innerHTML.
             containerRef.current.innerHTML = '';
         }
 
-        viewerRef.current = viewer(containerRef.current, {
+        viewerRef.current = pannellum.viewer(containerRef.current, {
             type: 'equirectangular',
             panorama: image,
             autoLoad: true,
@@ -34,7 +38,7 @@ const ThreeSixtyViewer: React.FC<ThreeSixtyViewerProps> = ({ imageUrl }) => {
         });
 
         return () => {
-            // Cleanup if needed
+            // Cleanup if API supported it
         };
     }, [image]);
 
