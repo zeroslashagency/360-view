@@ -17,8 +17,8 @@ const RelatedBlogs: React.FC = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                // Fetching from the API running locally
-                const response = await fetch('http://localhost:3000/posts?limit=3');
+                // Fetching from the API (proxied via Vite or Nginx)
+                const response = await fetch('/api/posts?limit=3');
                 if (!response.ok) {
                     throw new Error('Failed to fetch posts');
                 }
