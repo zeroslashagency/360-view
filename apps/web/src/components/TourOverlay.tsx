@@ -12,12 +12,22 @@ import {
     RotateCcw
 } from 'lucide-react';
 
-interface TourOverlayProps {
-    scene: { id: number; name: string; url: string };
-    onExit: () => void;
+interface Hotspot {
+    pitch: number;
+    yaw: number;
+    type: 'info' | 'scene';
+    text: string;
+    URL?: string;
+    sceneId?: string;
 }
 
-const TourOverlay: React.FC<TourOverlayProps> = ({ scene, onExit }) => {
+interface TourOverlayProps {
+    scene: { id: number; name: string; url: string; hotspots?: Hotspot[] };
+    onExit: () => void;
+    onSceneIdClick?: (id: number) => void;
+}
+
+const TourOverlay: React.FC<TourOverlayProps> = ({ scene, onExit, onSceneIdClick }) => {
     const [isFullscreen, setIsFullscreen] = useState(false);
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
@@ -37,7 +47,11 @@ const TourOverlay: React.FC<TourOverlayProps> = ({ scene, onExit }) => {
         <div className="fixed inset-0 z-50 bg-black text-white font-sans">
             {/* Background Viewer */}
             <div className="absolute inset-0 z-0">
-                <ThreeSixtyViewer imageUrl={scene.url} />
+                <ThreeSixtyViewer
+                    imageUrl={scene.url}
+                    hotspots={scene.hotspots}
+                    onSceneIdClick={onSceneIdClick}
+                />
             </div>
 
             {/* Top Left: Logo / Brand */}

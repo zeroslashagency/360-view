@@ -3,7 +3,7 @@ import { z } from 'zod';
 
 export async function uploadRoutes(app: FastifyInstance) {
 
-    // Presigned URL (Mock for now, would be S3 SDK in production)
+    // Presigned URL (AWS S3)
     app.post(
         '/presigned',
         {
@@ -16,14 +16,48 @@ export async function uploadRoutes(app: FastifyInstance) {
             },
         },
         async (request, reply) => {
-            const { filename } = request.body as any;
-            // In a real app, use @aws-sdk/client-s3 to generate a presigned PUT url
-            const key = `uploads/${Date.now()}-${filename}`;
+            const { filename, contentType } = request.body as any;
 
-            return {
-                url: `https://fake-s3-bucket.s3.amazonaws.com/${key}`, // Fake Upload URL
-                key,
-            };
+            // Check if AWS credentials are provided
+            if (!process.env.AWS_ACCESS_KEY_ID || !process.env.AWS_SECRET_ACCESS_KEY || !process.env.AWS_REGION || !process.env.AWS_BUCKET_NAME) {
+                request.log.warn('AWS Credentials missing, falling back to mock response');
+                const key = `uploads/mock/${Date.now()}-${filename}`;
+                return {
+                    url: `https://mock-s3-bucket.s3.amazonaws.com/${key}`,
+                    key,
+                    mock: true
+                };
+            }
+
+            try {
+                const { S3Client, PutObjectCommand } = await import('@aws-sdk/client-s3');
+                const { getSignedUrl } = await import('@aws-sdk/s3-request-presigner');
+
+                const client = new S3Client({
+                    region: process.env.AWS_REGION,
+                    credentials: {
+                        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                    },
+                });
+
+                const key = `uploads/${Date.now()}-${filename}`;
+                const command = new PutObjectCommand({
+                    Bucket: process.env.AWS_BUCKET_NAME,
+                    Key: key,
+                    ContentType: contentType,
+                });
+
+                const url = await getSignedUrl(client, command, { expiresIn: 3600 });
+
+                return {
+                    url,
+                    key,
+                };
+            } catch (error) {
+                request.log.error(error);
+                reply.status(500).send({ message: 'Failed to generate upload URL' });
+            }
         }
     );
 }

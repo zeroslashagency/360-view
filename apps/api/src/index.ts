@@ -41,9 +41,9 @@ server.decorate('authenticate', async (request: FastifyRequest, reply: FastifyRe
 });
 
 // Register Routes
-server.register(authRoutes, { prefix: '/auth' });
-server.register(postRoutes, { prefix: '/posts' });
-server.register(uploadRoutes, { prefix: '/upload' });
+server.register(authRoutes, { prefix: '/api/auth' });
+server.register(postRoutes, { prefix: '/api/posts' });
+server.register(uploadRoutes, { prefix: '/api/upload' });
 
 
 // Health check

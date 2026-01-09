@@ -13,7 +13,7 @@ async function main() {
             
 Experience the calm atmosphere, walk through the narrow cobblestone streets, and witness the daily life of the locals. 
 This tour captures the essence of rural beauty, preserved through time.`,
-            image: '/images/360/village.jpg',
+            image: 'https://blog-platform-uploads-007528838226.s3.amazonaws.com/tours/village.jpg',
             published: true,
         },
         {
@@ -22,7 +22,7 @@ This tour captures the essence of rural beauty, preserved through time.`,
             
 From towering skyscrapers to bustling market squares, this 360-degree experience lets you feel the pulse of the city. 
 Explore the modern infrastructure blended with historical landmarks.`,
-            image: '/images/360/city.jpg',
+            image: 'https://blog-platform-uploads-007528838226.s3.amazonaws.com/tours/city.jpg',
             published: true,
         },
         {
@@ -30,7 +30,7 @@ Explore the modern infrastructure blended with historical landmarks.`,
             content: `Step inside and marvel at the intricate designs of our featured indoor locations.
             
 This tour highlights the play of light and shadow, the texture of materials, and the thoughtful spatial planning that makes these interiors a masterpiece of design.`,
-            image: '/images/360/indoor.jpg',
+            image: 'https://blog-platform-uploads-007528838226.s3.amazonaws.com/tours/indoor.jpg',
             published: true,
         },
     ];

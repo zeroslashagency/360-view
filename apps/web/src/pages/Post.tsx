@@ -19,13 +19,28 @@ const Post: React.FC = () => {
     useEffect(() => {
         const fetchPost = async () => {
             try {
-                // Fetching from the API (proxied)
-                const response = await fetch(`/api/posts/${slug}`);
+                // Fetching from the API (direct to EC2)
+                const response = await fetch(`http://100.26.140.48:3000/api/posts/${slug}`);
                 if (!response.ok) {
                     if (response.status === 404) throw new Error('Post not found');
                     throw new Error('Failed to fetch post');
                 }
                 const data = await response.json();
+
+                // If content is a URL (e.g. from S3), fetch the actual markdown text
+                if (data.content && (data.content.startsWith('http://') || data.content.startsWith('https://'))) {
+                    try {
+                        const contentResponse = await fetch(data.content);
+                        if (contentResponse.ok) {
+                            data.content = await contentResponse.text();
+                        } else {
+                            console.warn("Failed to fetch remote content, showing URL instead.");
+                        }
+                    } catch (fetchErr) {
+                        console.error("Error fetching remote blog content:", fetchErr);
+                    }
+                }
+
                 setPost(data);
             } catch (err) {
                 console.error("Error fetching blog post:", err);
@@ -85,8 +100,8 @@ const Post: React.FC = () => {
             </div>
 
             {/* Content */}
-            <article className="max-w-3xl mx-auto px-6 py-12">
-                <div className="prose prose-lg prose-blue mx-auto">
+            <article className="max-w-4xl mx-auto px-6 py-16 md:py-24 animate-fade-in relative">
+                <div className="prose prose-lg md:prose-xl prose-slate mx-auto leading-relaxed tracking-tight text-gray-800">
                     <ReactMarkdown>{post.content}</ReactMarkdown>
                 </div>
             </article>

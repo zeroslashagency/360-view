@@ -7,15 +7,52 @@ const Home: React.FC = () => {
     const [activeScene, setActiveScene] = useState<{ id: number; name: string; url: string; cover: string } | null>(null);
 
     const scenes = [
-        { id: 1, name: 'Village View', url: '/images/360/village.jpg', cover: '/images/360/village.jpg' },
-        { id: 2, name: 'City Center', url: '/images/360/city.jpg', cover: '/images/360/city.jpg' },
-        { id: 3, name: 'Indoor Tour', url: '/images/360/indoor.jpg', cover: '/images/360/indoor.jpg' },
+        {
+            id: 1,
+            name: 'Village View',
+            url: '/images/360/village.jpg',
+            cover: '/images/360/village.jpg',
+            hotspots: [
+                { pitch: -10.42, yaw: -86.36, text: '🏙️ Go to City Center', type: 'scene', sceneId: '2' },
+                { pitch: -9.88, yaw: 51.70, text: '🏛️ Enter Indoor Tour', type: 'scene', sceneId: '3' }
+            ]
+        },
+        {
+            id: 2,
+            name: 'City Center',
+            url: '/images/360/city.jpg',
+            cover: '/images/360/city.jpg',
+            hotspots: [
+                { pitch: -5, yaw: 180, text: '🏙️ Central Plaza', type: 'info' },
+                { pitch: 45, yaw: 210, text: '🚁 Skyline View', type: 'info' },
+                { pitch: -10, yaw: 150, text: '🏠 Enter Indoor Tour', type: 'scene', sceneId: '3' },
+                { pitch: -10, yaw: 210, text: '🏡 Back to Village', type: 'scene', sceneId: '1' }
+            ]
+        },
+        {
+            id: 3,
+            name: 'Indoor Tour',
+            url: '/images/360/indoor.jpg',
+            cover: '/images/360/indoor.jpg',
+            hotspots: [
+                { pitch: -20, yaw: 160, text: '🛋️ Lounge Area', type: 'info' },
+                { pitch: 0, yaw: 200, text: '🖼️ Gallery Wall', type: 'info' },
+                { pitch: -15, yaw: 180, text: '🌆 Return to City', type: 'scene', sceneId: '2' }
+            ]
+        },
     ];
 
     return (
         <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
             {activeScene ? (
-                <TourOverlay scene={activeScene} onExit={() => setActiveScene(null)} />
+                <TourOverlay
+                    scene={activeScene}
+                    onExit={() => setActiveScene(null)}
+                    onSceneIdClick={(id) => {
+                        const nextScene = scenes.find(s => s.id === id);
+                        if (nextScene) setActiveScene(nextScene);
+                    }}
+                />
             ) : (
                 <>
                     {/* Hero Section */}

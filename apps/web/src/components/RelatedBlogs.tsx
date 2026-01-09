@@ -17,8 +17,8 @@ const RelatedBlogs: React.FC = () => {
     useEffect(() => {
         const fetchPosts = async () => {
             try {
-                // Fetching from the API (proxied via Vite or Nginx)
-                const response = await fetch('/api/posts?limit=3');
+                // Fetching from the API (direct to EC2)
+                const response = await fetch('http://100.26.140.48:3000/api/posts?limit=3');
                 if (!response.ok) {
                     throw new Error('Failed to fetch posts');
                 }
