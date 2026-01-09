@@ -24,7 +24,7 @@ const Home: React.FC = () => {
                         <h2 className="text-3xl font-bold text-gray-900">Immersive View</h2>
                         <p className="mt-4 text-lg text-gray-600">Experience the location in full 360 degrees.</p>
                     </div>
-                    <ThreeSixtyViewer imageUrl="https://via.placeholder.com/800x400?text=360+Placeholder" />
+                    <ThreeSixtyViewer />
                 </div>
             </section>
 
