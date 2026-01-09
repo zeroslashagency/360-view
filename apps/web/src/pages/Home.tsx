@@ -25,7 +25,7 @@ const Home: React.FC = () => {
 
                         <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
                             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight mb-4 drop-shadow-lg">
-                                Virtual Asset Tours
+                                Nestoric Digital
                             </h1>
                             <p className="text-lg md:text-xl font-light text-gray-300 mb-8">
                                 Select a location below to begin your immersive experience.

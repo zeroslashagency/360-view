@@ -1,12 +1,13 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
+import Post from './pages/Post';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        {/* Add more routes here, e.g., /post/:slug, /admin */}
+        <Route path="/posts/:slug" element={<Post />} />
       </Routes>
     </BrowserRouter>
   );
